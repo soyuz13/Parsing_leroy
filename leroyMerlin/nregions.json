@@ -1,0 +1,226 @@
+{
+  "Москва, Московская область": {
+    "site": "leroymerlin.ru",
+    "id": "34"
+  },
+  "Москва": {
+    "site": "leroymerlin.ru",
+    "id": "34"
+  },
+  "Санкт-Петербург": {
+    "site": "spb.leroymerlin.ru",
+    "id": "506"
+  },
+  "Архангельск": {
+    "site": "arkhangelsk.leroymerlin.ru",
+    "id": "6063"
+  },
+  "Барнаул": {
+    "site": "barnaul.leroymerlin.ru",
+    "id": "2397"
+  },
+  "Белгород": {
+    "site": "belgorod.leroymerlin.ru",
+    "id": "6725"
+  },
+  "Владивосток": {
+    "site": "vladivostok.leroymerlin.ru",
+    "id": "7138"
+  },
+  "Владикавказ": {
+    "site": "vladikavkaz.leroymerlin.ru",
+    "id": "7011"
+  },
+  "Волгоград": {
+    "site": "volgograd.leroymerlin.ru",
+    "id": "716"
+  },
+  "Волжский": {
+    "site": "volzhskiy.leroymerlin.ru",
+    "id": "6349"
+  },
+  "Воронеж": {
+    "site": "voronezh.leroymerlin.ru",
+    "id": "510"
+  },
+  "Екатеринбург": {
+    "site": "ekaterinburg.leroymerlin.ru",
+    "id": "715"
+  },
+  "Иваново": {
+    "site": "ivanovo.leroymerlin.ru",
+    "id": "7278"
+  },
+  "Ижевск": {
+    "site": "izhevsk.leroymerlin.ru",
+    "id": "6609"
+  },
+  "Иркутск": {
+    "site": "irkutsk.leroymerlin.ru",
+    "id": "5342"
+  },
+  "Казань": {
+    "site": "kazan.leroymerlin.ru",
+    "id": "1448"
+  },
+  "Калининград": {
+    "site": "kaliningrad.leroymerlin.ru",
+    "id": "6048"
+  },
+  "Калуга": {
+    "site": "kaluga.leroymerlin.ru",
+    "id": "6607"
+  },
+  "Кемерово": {
+    "site": "kemerovo.leroymerlin.ru",
+    "id": "2393"
+  },
+  "Киров": {
+    "site": "kirov.leroymerlin.ru",
+    "id": "3429"
+  },
+  "Клин": {
+    "site": "klin.leroymerlin.ru",
+    "id": "8232"
+  },
+  "Кострома": {
+    "site": "kostroma.leroymerlin.ru",
+    "id": "3428"
+  },
+  "Краснодар": {
+    "site": "krasnodar.leroymerlin.ru",
+    "id": "505"
+  },
+  "Красноярск": {
+    "site": "krasnoyarsk.leroymerlin.ru",
+    "id": "539"
+  },
+  "Курск": {
+    "site": "kursk.leroymerlin.ru",
+    "id": "6062"
+  },
+  "Липецк": {
+    "site": "lipetsk.leroymerlin.ru",
+    "id": "7290"
+  },
+  "Набережные Челны": {
+    "site": "naberezhnye-chelny.leroymerlin.ru",
+    "id": "2949"
+  },
+  "Наро-Фоминск": {
+    "site": "naro-fominsk.leroymerlin.ru",
+    "id": "8492"
+  },
+  "Нижний Новгород": {
+    "site": "nizhniy-novgorod.leroymerlin.ru",
+    "id": "6466"
+  },
+  "Новокузнецк": {
+    "site": "novokuznetsk.leroymerlin.ru",
+    "id": "2389"
+  },
+  "Новороссийск": {
+    "site": "novorossiysk.leroymerlin.ru",
+    "id": "7073"
+  },
+  "Новосибирск": {
+    "site": "novosibirsk.leroymerlin.ru",
+    "id": "508"
+  },
+  "Омск": {
+    "site": "omsk.leroymerlin.ru",
+    "id": "509"
+  },
+  "Оренбург": {
+    "site": "orenburg.leroymerlin.ru",
+    "id": "4794"
+  },
+  "Пенза": {
+    "site": "penza.leroymerlin.ru",
+    "id": "3257"
+  },
+  "Пермь": {
+    "site": "perm.leroymerlin.ru",
+    "id": "5057"
+  },
+  "Петрозаводск": {
+    "site": "petrozavodsk.leroymerlin.ru",
+    "id": "5343"
+  },
+  "Псков": {
+    "site": "pskov.leroymerlin.ru",
+    "id": "7874"
+  },
+  "Ростов-на-Дону": {
+    "site": "rostov.leroymerlin.ru",
+    "id": "504"
+  },
+  "Рязань": {
+    "site": "ryazan.leroymerlin.ru",
+    "id": "1447"
+  },
+  "Самара": {
+    "site": "samara.leroymerlin.ru",
+    "id": "507"
+  },
+  "Саранск": {
+    "site": "saransk.leroymerlin.ru",
+    "id": "6395"
+  },
+  "Саратов": {
+    "site": "saratov.leroymerlin.ru",
+    "id": "3439"
+  },
+  "Смоленск": {
+    "site": "smolensk.leroymerlin.ru",
+    "id": "8332"
+  },
+  "Ставрополь": {
+    "site": "stavropol.leroymerlin.ru",
+    "id": "3752"
+  },
+  "Сургут": {
+    "site": "surgut.leroymerlin.ru",
+    "id": "8157"
+  },
+  "Тверь": {
+    "site": "tver.leroymerlin.ru",
+    "id": "1437"
+  },
+  "Тольятти": {
+    "site": "tolyatti.leroymerlin.ru",
+    "id": "3402"
+  },
+  "Тула": {
+    "site": "tula.leroymerlin.ru",
+    "id": "3258"
+  },
+  "Тюмень": {
+    "site": "tyumen.leroymerlin.ru",
+    "id": "1443"
+  },
+  "Ульяновск": {
+    "site": "ulyanovsk.leroymerlin.ru",
+    "id": "3399"
+  },
+  "Уфа": {
+    "site": "ufa.leroymerlin.ru",
+    "id": "511"
+  },
+  "Хабаровск": {
+    "site": "habarovsk.leroymerlin.ru",
+    "id": "4124"
+  },
+  "Челябинск": {
+    "site": "chelyabinsk.leroymerlin.ru",
+    "id": "2149"
+  },
+  "Череповец": {
+    "site": "cherepovets.leroymerlin.ru",
+    "id": "6516"
+  },
+  "Ярославль": {
+    "site": "yaroslavl.leroymerlin.ru",
+    "id": "3372"
+  }
+}
