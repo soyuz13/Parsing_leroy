@@ -3,4 +3,6 @@ pandas~=1.4.4
 openpyxl~=3.0.10
 python-dotenv~=0.21.0
 PySimpleGUI~=4.60.3
-fake_useragent
+fake_useragent=0.1.11
+selenium-wire=4.6.5
+undetected-chromedriver=3.1.5.post4
