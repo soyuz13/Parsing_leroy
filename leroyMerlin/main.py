@@ -189,18 +189,14 @@ def requesting(inputs, window, regions):
 def get_window():
     column_to_be_centered = [
         [sg.Frame("Данные для обработки", element_justification = "center", expand_x=True, layout = [
-        [sg.Text("Файл для парсинга: "), sg.Input(size=(60, 1), enable_events=True, key='-FILENAME-', expand_x=True), sg.FileBrowse(button_text='Выбрать', key="-IN-", file_types=(("Excel", "*.xlsx"), ))],
-        # [sg.T(''),],
+        [sg.Text("Файл для парсинга: "), sg.Input(size=(10, 1), enable_events=True, key='-FILENAME-', expand_x=True), sg.FileBrowse(button_text='Выбрать', key="-IN-", file_types=(("Excel", "*.xlsx"), ))],
         [sg.T("Количество артикулов по регионам")],
         [sg.Table([], col_widths=[15, 10], num_rows=6,  headings=['Регион', 'Кол-во SKU'], key='-TABLE-', auto_size_columns=False)]
             ])],
         [sg.B("Запуск парсинга", disabled=True), sg.B('СТОП', disabled=True)],
         [sg.Frame('Статус обработки', element_justification = "center", layout = [
-        # [sg.T(''),],
-        # [sg.T(''),],
         [sg.T('Прогресс: '), sg.ProgressBar(100, orientation='h', expand_x=True, size=(10, 12), key='-PBAR-', bar_color=('blue', 'white'), relief='RELIEF_FLAT', border_width=1)],
-        [sg.Multiline(key='-ML-'+sg.WRITE_ONLY_KEY, size=(145, 18), auto_refresh=True),]])]]
-        # [sg.T('weewwe')]
+        [sg.Multiline(key='-ML-'+sg.WRITE_ONLY_KEY, size=(145, 25), auto_refresh=True),]])]]
     # ]
 
     layout = [[sg.VPush()],
