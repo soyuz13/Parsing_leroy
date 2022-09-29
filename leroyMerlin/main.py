@@ -13,14 +13,31 @@ from pathlib import Path
 from config import PROXY_HOST, PROXY_PORT, PROXY_USER, PROXY_PASS, MIN_DELAY, MAX_DELAY
 from threading import Thread
 
+# import undetected_chromedriver.v2 as uc
 from seleniumwire import undetected_chromedriver as uc
 
 # sg.theme_previewer()
 # exit(0)
 
 sg.theme('Default1')
-input_filename = ''
-output_filename = ''
+# input_filename = ''
+# output_filename = ''
+
+def proxy_check() -> bool:
+    proxies = {
+        "http": f"http://{PROXY_USER}:{PROXY_PASS}@{PROXY_HOST}:{PROXY_PORT}/",
+        "https": f"http://{PROXY_USER}:{PROXY_PASS}@{PROXY_HOST}:{PROXY_PORT}/"
+    }
+
+    url = 'https://api.ipify.org'
+
+    try:
+        response = requests.get(url, proxies=proxies)
+        assert response.text==PROXY_HOST
+        return True
+    except:
+        print("Прокси не прошел проверку на валидность")
+        return False
 
 
 def get_qrator_id(proxy: Union[None, str] = None) -> str:
@@ -167,13 +184,22 @@ def process_inputs_dict(inputs: dict, window, session, regions: dict) -> list:
 
 
 def requesting(inputs, window, regions):
-    qrator_jsid = get_qrator_id(f'{PROXY_USER}:{PROXY_PASS}@{PROXY_HOST}:{PROXY_PORT}')
+    global output_filename
+    global PROXY_IS_USED
+
+    if PROXY_IS_USED:
+        proxy_string = f'{PROXY_USER}:{PROXY_PASS}@{PROXY_HOST}:{PROXY_PORT}'
+    else:
+        proxy_string = None
+    qrator_jsid = get_qrator_id(proxy_string)
     headers = create_headers(qrator_jsid)
     proxies = get_proxy_dict()
 
     with requests.Session() as session:
         session.headers.update(headers)
-        session.proxies.update(proxies)
+        if PROXY_IS_USED:
+            session.proxies.update(proxies)
+
         st = time.time()
         output_records = process_inputs_dict(inputs, window, session, regions)
         sg.cprint('', key='-ML-'+sg.WRITE_ONLY_KEY)
@@ -193,6 +219,7 @@ def get_window():
         [sg.T("Количество артикулов по регионам")],
         [sg.Table([], col_widths=[15, 10], num_rows=4,  headings=['Регион', 'Кол-во SKU'], key='-TABLE-', auto_size_columns=False)]
             ])],
+        [sg.Checkbox('Использовать прокси-IP', key='-PROXY-', default=False, enable_events=True, tooltip='Для использования прокси необходимо прописать его параметры в файле .env')],
         [sg.B("Запуск парсинга", disabled=True), sg.B('СТОП', disabled=True)],
         [sg.Frame('Статус обработки', element_justification = "center", layout = [
         [sg.T('Прогресс: '), sg.ProgressBar(100, orientation='h', expand_x=True, size=(10, 12), key='-PBAR-', bar_color=('blue', 'white'), relief='RELIEF_FLAT', border_width=1)],
@@ -215,11 +242,24 @@ def main():
     global input_filename
     global output_filename
     global PARSING_IS_STOPPED
+    global PROXY_IS_USED
 
     while True:
-        event, values = window.read(timeout=100)
+        event, values = window.read()
+        # print(event, values)
+
         if event in (sg.WIN_CLOSED, "Exit", None):
             break
+
+        elif event == '-PROXY-':
+            if values['-PROXY-']:
+                if proxy_check():
+                    PROXY_IS_USED = True
+                else:
+                    sg.popup_error('Прокси-сервер не действительный!')
+                    window['-PROXY-'].Update(value=False)
+            PROXY_IS_USED = False
+
         elif event == 'Запуск парсинга':
             PARSING_IS_STOPPED = False
             window['Запуск парсинга'].update(disabled=True)
@@ -253,3 +293,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
