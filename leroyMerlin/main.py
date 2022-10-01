@@ -44,9 +44,11 @@ def proxy_check() -> bool:
     try:
         response = requests.get(url, proxies=proxies)
         assert response.text==PROXY_HOST
+        send_tlg_msg('Прокси успешно проверен')
         return True
     except:
         print("Прокси не прошел проверку на валидность")
+        send_tlg_msg('Прокси не прошел проверку на валидность')
         return False
 
 
