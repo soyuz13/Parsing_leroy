@@ -182,7 +182,6 @@ def process_inputs_dict(inputs: dict, window, session, regions: dict) -> list:
             screen_text = f'{counter_in_region:3d}. {key}: {article} - {price} - {name}'
             sg.cprint(screen_text, key='-ML-'+sg.WRITE_ONLY_KEY)
             progress = round(counter_total/all_inputs_len*100)
-            print(progress)
             window['-PBAR-'].update(progress)
 
             delay = randint(MIN_DELAY, MAX_DELAY)/10
@@ -242,7 +241,7 @@ def get_window():
         [sg.Table([], col_widths=[15, 10], num_rows=4,  headings=['Регион', 'Кол-во SKU'], key='-TABLE-', auto_size_columns=False)]
             ])],
         [sg.Checkbox('Использовать прокси-IP', key='-PROXY-', default=False, enable_events=True, tooltip='Для использования прокси необходимо прописать его параметры в файле .env')],
-        [sg.B("Запуск парсинга", disabled=True), sg.B('СТОП', disabled=True), sg.B('Тест куратора')],
+        [sg.B("Запуск парсинга", disabled=True), sg.B('СТОП', disabled=True)],
         [sg.Frame('Статус обработки', element_justification = "center", layout = [
         [sg.T('Прогресс: '), sg.ProgressBar(100, orientation='h', expand_x=True, size=(10, 12), key='-PBAR-', bar_color=('blue', 'white'), relief='RELIEF_FLAT', border_width=1)],
         [sg.Multiline(key='-ML-'+sg.WRITE_ONLY_KEY, size=(145, 30), auto_refresh=True),]])]]
@@ -291,9 +290,6 @@ def main():
             thread = Thread(target=requesting, args=(inputs, window, regions))
             thread.start()
 
-        elif event == 'Тест куратора':
-            qrator_check()
-
         elif event == 'СТОП':
             PARSING_IS_STOPPED = True
             window['Запуск парсинга'].update(disabled=False)
@@ -304,6 +300,7 @@ def main():
             input_filename = values['-FILENAME-']
             output_filename = (Path(input_filename).parent) / (Path(input_filename).stem + ' - output' + Path(input_filename).suffix)
             window['-ML-'+sg.WRITE_ONLY_KEY].update(value='')
+            window['-PBAR-'].update(0)
 
             inputs = convert_excel_input_to_dict(filename=input_filename)
             if inputs:
