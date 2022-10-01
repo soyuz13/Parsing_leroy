@@ -6,3 +6,4 @@ PySimpleGUI~=4.60.3
 fake_useragent=0.1.11
 selenium-wire=4.6.5
 undetected-chromedriver=3.1.5.post4
+pyTelegramBotAPI=4.7.0

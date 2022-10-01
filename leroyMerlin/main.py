@@ -10,18 +10,28 @@ import datetime as dt
 from typing import Union
 import PySimpleGUI as sg
 from pathlib import Path
-from config import PROXY_HOST, PROXY_PORT, PROXY_USER, PROXY_PASS, MIN_DELAY, MAX_DELAY
+from config import PROXY_HOST, PROXY_PORT, PROXY_USER, PROXY_PASS, MIN_DELAY, MAX_DELAY, TLG_TOKEN, TLG_CHAT_ID
+
 from threading import Thread
+import telebot
 
 # import undetected_chromedriver.v2 as uc
 from seleniumwire import undetected_chromedriver as uc
 
-# sg.theme_previewer()
-# exit(0)
-
 sg.theme('Default1')
-# input_filename = ''
-# output_filename = ''
+PROXY_IS_USED = False
+QRATOR_JSID = None
+MSG_PREIX = 'Новосиб. '
+
+
+def send_tlg_msg(text: str) -> bool:
+    if all((TLG_TOKEN, TLG_CHAT_ID)):
+        bot = telebot.TeleBot(token=TLG_TOKEN, parse_mode='HTML')
+        bot.send_message(chat_id=TLG_CHAT_ID, text=MSG_PREIX + text)
+        return True
+    else:
+        return False
+
 
 def proxy_check() -> bool:
     proxies = {
@@ -41,6 +51,7 @@ def proxy_check() -> bool:
 
 
 def get_qrator_id(proxy: Union[None, str] = None) -> str:
+    global QRATOR_JSID
     if proxy:
         chrome_options = {
             'proxy': {
@@ -66,8 +77,10 @@ def get_qrator_id(proxy: Union[None, str] = None) -> str:
 
     if qrator_jsid == '':
         print('Cannot parse qrator_jsid cookie from site')
+        send_tlg_msg('Невозможно получить qrator')
         sys.exit()
 
+    QRATOR_JSID = qrator_jsid
     return str(qrator_jsid)
 
 
@@ -191,7 +204,10 @@ def requesting(inputs, window, regions):
         proxy_string = f'{PROXY_USER}:{PROXY_PASS}@{PROXY_HOST}:{PROXY_PORT}'
     else:
         proxy_string = None
+
+    send_tlg_msg('Запуск браузера')
     qrator_jsid = get_qrator_id(proxy_string)
+    send_tlg_msg('Старт обработки списка')
     headers = create_headers(qrator_jsid)
     proxies = get_proxy_dict()
 
@@ -203,9 +219,15 @@ def requesting(inputs, window, regions):
         st = time.time()
         output_records = process_inputs_dict(inputs, window, session, regions)
         sg.cprint('', key='-ML-'+sg.WRITE_ONLY_KEY)
-        sg.cprint(f'Время выполнения: {round((time.time()-st)/60, 1)} минут', key='-ML-'+sg.WRITE_ONLY_KEY)
+        fin = round((time.time()-st)/60, 1)
+        msg = f'Время выполнения: {fin} минут'
+        send_tlg_msg(f'Обработано записей: {len(output_records)}. ' + msg)
+        sg.cprint(msg, key='-ML-'+sg.WRITE_ONLY_KEY)
         sg.cprint('', key='-ML-'+sg.WRITE_ONLY_KEY)
-        print(f'Время выполнения: {time.time()-st}')
+        print(msg)
+
+        window['Запуск парсинга'].update(disabled=False)
+        window['СТОП'].update(disabled=True)
 
         df = pd.DataFrame(output_records, columns=['Артикул', 'Город', "Название", "Цена", 'Дата запроса'])
         df.to_excel(output_filename, index=False)
@@ -220,13 +242,14 @@ def get_window():
         [sg.Table([], col_widths=[15, 10], num_rows=4,  headings=['Регион', 'Кол-во SKU'], key='-TABLE-', auto_size_columns=False)]
             ])],
         [sg.Checkbox('Использовать прокси-IP', key='-PROXY-', default=False, enable_events=True, tooltip='Для использования прокси необходимо прописать его параметры в файле .env')],
-        [sg.B("Запуск парсинга", disabled=True), sg.B('СТОП', disabled=True)],
+        [sg.B("Запуск парсинга", disabled=True), sg.B('СТОП', disabled=True), sg.B('Тест куратора')],
         [sg.Frame('Статус обработки', element_justification = "center", layout = [
         [sg.T('Прогресс: '), sg.ProgressBar(100, orientation='h', expand_x=True, size=(10, 12), key='-PBAR-', bar_color=('blue', 'white'), relief='RELIEF_FLAT', border_width=1)],
         [sg.Multiline(key='-ML-'+sg.WRITE_ONLY_KEY, size=(145, 30), auto_refresh=True),]])]]
     # ]
 
-    layout = [[sg.VPush()],
+    layout = [
+                [sg.VPush()],
               [sg.Push(), sg.Column(column_to_be_centered, element_justification='c'), sg.Push()],
               [sg.VPush()]
         ]
@@ -261,32 +284,48 @@ def main():
             PROXY_IS_USED = False
 
         elif event == 'Запуск парсинга':
+            #TODO сделать проверку куратора на каждом запросе. Возможно, он не истекает
             PARSING_IS_STOPPED = False
             window['Запуск парсинга'].update(disabled=True)
             window['СТОП'].update(disabled=False)
             thread = Thread(target=requesting, args=(inputs, window, regions))
             thread.start()
 
+        elif event == 'Тест куратора':
+            qrator_check()
+
         elif event == 'СТОП':
             PARSING_IS_STOPPED = True
             window['Запуск парсинга'].update(disabled=False)
             window['СТОП'].update(disabled=True)
+            send_tlg_msg('СТОП парсинга')
 
         elif event == '-FILENAME-':
             input_filename = values['-FILENAME-']
             output_filename = (Path(input_filename).parent) / (Path(input_filename).stem + ' - output' + Path(input_filename).suffix)
+            window['-ML-'+sg.WRITE_ONLY_KEY].update(value='')
 
             inputs = convert_excel_input_to_dict(filename=input_filename)
             if inputs:
                 regions = get_regions()
                 tabs = [[region, len(inputs[region])] for region in inputs]
+
                 all_inputs_len = sum([len(inputs[region]) for region in inputs])
+                msg_text = f'Исходный файл ({all_inputs_len}):\n'
+                for i in tabs:
+                    msg_text += f'{i[0]}: {i[1]}\n'
+                send_tlg_msg(msg_text)
+
                 window['-TABLE-'].update(values=tabs)
                 window['Запуск парсинга'].update(disabled=False)
             else:
                 window['Запуск парсинга'].update(disabled=True)
                 window['-TABLE-'].update(values=[])
-                sg.popup_error('Данный файл не содержит листов с названиями регионов!')
+
+                msg_text = 'Данный файл не содержит листов с названиями регионов!'
+                sg.popup_error(msg_text)
+                send_tlg_msg(msg_text)
+
 
     print('Done')
 
