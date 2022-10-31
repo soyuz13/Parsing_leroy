@@ -67,14 +67,9 @@ def get_qrator_id(proxy: Union[None, str] = None) -> str:
         }
     else:
         chrome_options = {}
-    # chrome_options.update({'--headless': True})
 
     driver = uc.Chrome(use_subprocess=True, seleniumwire_options=chrome_options, version_main=106)
 
-    # print(driver.capabilities)
-    # driver = uc.Chrome(ChromeDriverManager().install(), use_subprocess=True, seleniumwire_options=chrome_options)
-
-    # exit(0)
     try:
         driver.get('https://leroymerlin.ru/')
     except Exception as ex:
