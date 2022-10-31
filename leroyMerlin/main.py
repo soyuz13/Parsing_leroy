@@ -56,7 +56,6 @@ def proxy_check() -> bool:
 
 def get_qrator_id(proxy: Union[None, str] = None) -> str:
 
-    from webdriver_manager.chrome import ChromeDriverManager
     global QRATOR_JSID
     if proxy:
         proxy_dict =  {
