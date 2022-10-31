@@ -43,30 +43,43 @@ def proxy_check() -> bool:
 
     try:
         response = requests.get(url, proxies=proxies)
-        assert response.text==PROXY_HOST
+        assert response.text == PROXY_HOST
         send_tlg_msg('Прокси успешно проверен')
         return True
-    except:
-        print("Прокси не прошел проверку на валидность")
-        send_tlg_msg('Прокси не прошел проверку на валидность')
+    except Exception as ex:
+        # print("Прокси не прошел проверку на валидность")
+        send_tlg_msg(f'Ошибка проверки прокси: {ex}')
         return False
 
 
 def get_qrator_id(proxy: Union[None, str] = None) -> str:
+
+    from webdriver_manager.chrome import ChromeDriverManager
     global QRATOR_JSID
     if proxy:
+        proxy_dict =  {
+            'http': f'http://{proxy}',
+            'https': f'https://{proxy}',
+            'no_proxy': '127.0.0.1'
+        }
         chrome_options = {
-            'proxy': {
-                'http': f'http://{proxy}',
-                'https': f'https://{proxy}',
-                'no_proxy': 'localhost,127.0.0.1'
-            }
+            'proxy': proxy_dict
         }
     else:
         chrome_options = {}
+    # chrome_options.update({'--headless': True})
 
-    driver = uc.Chrome(use_subprocess=True, seleniumwire_options=chrome_options)
-    driver.get('https://leroymerlin.ru/')
+    driver = uc.Chrome(use_subprocess=True, seleniumwire_options=chrome_options, version_main=106)
+
+    # print(driver.capabilities)
+    # driver = uc.Chrome(ChromeDriverManager().install(), use_subprocess=True, seleniumwire_options=chrome_options)
+
+    # exit(0)
+    try:
+        driver.get('https://leroymerlin.ru/')
+    except Exception as ex:
+        send_tlg_msg(f'Ошибка при запуске браузера: {ex}')
+
     time.sleep(5)
     cookies = driver.get_cookies()
     driver.quit()
@@ -78,7 +91,7 @@ def get_qrator_id(proxy: Union[None, str] = None) -> str:
             print('Qrator: ' + qrator_jsid)
 
     if qrator_jsid == '':
-        print('Cannot parse qrator_jsid cookie from site')
+        print('Невозможно получить qrator')
         send_tlg_msg('Невозможно получить qrator')
         sys.exit()
 
@@ -87,7 +100,8 @@ def get_qrator_id(proxy: Union[None, str] = None) -> str:
 
 
 def get_regions() -> dict:
-    with open('nregions.json', 'r', encoding='utf-8') as f:
+    path = Path(__file__).parent / 'nregions.json'
+    with open(path, 'r', encoding='utf-8') as f:
         regions = json.load(f)
     return regions
 
