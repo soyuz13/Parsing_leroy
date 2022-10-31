@@ -235,7 +235,7 @@ def requesting(inputs, window, regions):
         send_tlg_msg(f'Обработано записей: {len(output_records)}. ' + msg)
         sg.cprint(msg, key='-ML-'+sg.WRITE_ONLY_KEY)
         sg.cprint('', key='-ML-'+sg.WRITE_ONLY_KEY)
-        print(msg)
+        # print(msg)
 
         window['Запуск парсинга'].update(disabled=False)
         window['СТОП'].update(disabled=True)
